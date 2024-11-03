@@ -69,6 +69,10 @@ class MainController:
     def show_reservation(self):
         """Muestra la vista de reservas"""
         self.show_frame("reservation")
+        
+    def show_rooms(self):
+        """Muestra la vista de habitaciones"""
+        self.show_frame("rooms")    
 
     def login(self, email, password):
         user = self.hotel.iniciar_sesion(email, password)
@@ -92,9 +96,22 @@ class MainController:
 
     def make_reservation(self, room_type, check_in, check_out):
         if self.current_user:
-            reserva = Reserva(self.current_user, room_type, check_in, check_out)
-            self.hotel.hacer_reserva(reserva)
-            return True
+            # Buscar habitación disponible del tipo solicitado
+            habitacion = None
+            for h in self.hotel.habitaciones:
+                if h.tipo == room_type and self.hotel.verificar_disponibilidad(h.id_habitacion, check_in, check_out):
+                    habitacion = h
+                    break
+
+            if habitacion:
+                reserva = self.hotel.realizar_reserva(
+                    habitacion.id_habitacion,
+                    self.current_user,
+                    check_in,
+                    check_out
+                )
+                return True if reserva else False
+            return False
         return False
 
     def get_available_rooms(self):
@@ -122,5 +139,23 @@ class MainController:
         return False 
     
     def show_history(self):
+        self.debug_reservations()
         self.frames["history"].update_reservations()
         self.show_frame("history")
+        
+    def debug_reservations(self):
+        """Método de depuración para verificar las reservas"""
+        print("\nDebug Reservations:")
+        print(f"Usuario actual: {self.current_user.nombre if self.current_user else 'None'}")
+        reservas = self.get_user_reservations()
+        print(f"Número de reservas: {len(reservas)}")
+        for reserva in reservas:
+            print(f"Reserva: {reserva.habitacion.tipo} - {reserva.fecha_entrada} a {reserva.fecha_salida}")    
+
+    def modify_reservation(self, reservation_id, new_check_in, new_check_out):
+        """Modifica una reserva existente"""
+        return self.hotel.modificar_reserva(reservation_id, new_check_in, new_check_out)
+
+    def cancel_reservation(self, reservation_id):
+        """Cancela una reserva existente"""
+        return self.hotel.cancelar_reserva(reservation_id)

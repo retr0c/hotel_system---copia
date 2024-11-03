@@ -9,6 +9,7 @@ class Reserva:
         self.usuario = usuario
         self.fecha_entrada = fecha_entrada
         self.fecha_salida = fecha_salida
+        self.estado = "Activa"
 
     def calcular_precio_total(self):
         dias_estancia = (self.fecha_salida - self.fecha_entrada).days

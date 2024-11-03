@@ -1,4 +1,3 @@
-# views/reservation_view.py
 import customtkinter as ctk
 from tkcalendar import DateEntry
 from datetime import datetime
@@ -116,39 +115,70 @@ class ReservationView(ctk.CTkFrame):
         check_in = self.check_in_date.get_date()
         check_out = self.check_out_date.get_date()
         
-        # Calcular el número de días
-        days = (check_out - check_in).days
+        if check_in >= check_out:
+            self.show_error("La fecha de salida debe ser posterior a la fecha de entrada.")
+            return
         
-        # Obtener el precio de la habitación (esto debería venir del modelo)
-        prices = {"Individual": 50, "Doble": 80, "Suite": 150}
-        price_per_night = prices.get(room_type, 0)
+        success = self.controller.make_reservation(room_type, check_in, check_out)
         
-        total_price = days * price_per_night
-        
-        # Mostrar mensaje de confirmación
-        confirmation = ctk.CTkToplevel(self)
-        confirmation.title("Confirmación de Reserva")
-        confirmation.geometry("400x300")
-        
-        message = f"Reserva confirmada para {self.controller.current_user.nombre}\n\n"
-        message += f"Habitación: {room_type}\n"
-        message += f"Fecha de llegada: {check_in.strftime('%d/%m/%Y')}\n"
-        message += f"Fecha de salida: {check_out.strftime('%d/%m/%Y')}\n"
-        message += f"Número de noches: {days}\n"
-        message += f"Precio total: ${total_price}"
+        if success:
+            # Código para mostrar confirmación
+            days = (check_out - check_in).days
+            prices = {"Individual": 50, "Doble": 80, "Suite": 150}
+            price_per_night = prices.get(room_type, 0)
+            total_price = days * price_per_night
+            
+            confirmation = ctk.CTkToplevel(self)
+            confirmation.title("Confirmación de Reserva")
+            confirmation.geometry("400x300")
+            
+            message = f"Reserva confirmada para {self.controller.current_user.nombre}\n\n"
+            message += f"Habitación: {room_type}\n"
+            message += f"Fecha de llegada: {check_in.strftime('%d/%m/%Y')}\n"
+            message += f"Fecha de salida: {check_out.strftime('%d/%m/%Y')}\n"
+            message += f"Número de noches: {days}\n"
+            message += f"Precio total: ${total_price}"
+            
+            ctk.CTkLabel(
+                confirmation,
+                text=message,
+                font=("Helvetica", 16),
+                text_color="#FFD700",
+                wraplength=350
+            ).pack(pady=20, padx=20)
+            
+            def close_and_update():
+                confirmation.destroy()
+                self.controller.show_history()
+            
+            ctk.CTkButton(
+                confirmation,
+                text="Aceptar",
+                command=close_and_update,
+                fg_color="#FFD700",
+                text_color="black",
+                hover_color="#CFB53B"
+            ).pack(pady=20)
+        else:
+            self.show_error("No hay habitaciones disponibles del tipo seleccionado para las fechas indicadas.\nPor favor, seleccione otras fechas o un tipo diferente de habitación.")
+
+    def show_error(self, message):
+        error = ctk.CTkToplevel(self)
+        error.title("Error")
+        error.geometry("400x200")
         
         ctk.CTkLabel(
-            confirmation,
+            error,
             text=message,
-            font=("Helvetica", 16),
+            font=("Helvetica", 14),
             text_color="#FFD700",
             wraplength=350
-        ).pack(pady=20, padx=20)
+        ).pack(pady=20)
         
         ctk.CTkButton(
-            confirmation,
+            error,
             text="Aceptar",
-            command=confirmation.destroy,
+            command=error.destroy,
             fg_color="#FFD700",
             text_color="black",
             hover_color="#CFB53B"
