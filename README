@@ -1,0 +1,43 @@
+# Luxury Hotel Reservation System
+
+## Descripción
+Luxury Hotel es un sistema de reservas que permite a los usuarios ver habitaciones disponibles, hacer reservas, y gestionar su historial de reservas. Además, los administradores pueden modificar los precios de las habitaciones y gestionar las reservas.
+
+## Requisitos del sistema
+- Python 3.6 o superior
+- Bibliotecas:
+  - customtkinter
+  - tkcalendar
+  - pandas
+  - requests
+  - python-telegram-bot
+
+## Instalación
+1. Clona este repositorio:
+   
+   git clone https://github.com/retr0c/hotel_system---copia.git
+   cd luxury_hotel
+
+Instala las dependencias:
+
+pip install -r requirements.txt   
+
+
+Características:
+
+Visualización de habitaciones disponibles
+Reserva de habitaciones
+Gestión de reservas (modificación y cancelación)
+Panel de administración para gestionar precios de habitaciones
+Integración con un bot de Telegram para soporte
+
+Tecnologías utilizadas:
+
+Python
+Tkinter (a través de customtkinter)
+tkcalendar para selección de fechas
+pandas para la gestión de datos
+
+Licencia:
+
+Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
