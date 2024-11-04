@@ -28,13 +28,14 @@ class Hotel:
 
     def realizar_reserva(self, id_habitacion, usuario, fecha_entrada, fecha_salida):
         habitacion = self.obtener_habitacion_por_id(id_habitacion)
-        if habitacion and habitacion.consultar_disponibilidad():
-            reserva = Reserva(self.contador_reservas, habitacion, usuario, fecha_entrada, fecha_salida)
-            self.reservas[self.contador_reservas] = reserva
-            self.contador_reservas += 1
-            habitacion.actualizar_estado('Reservada')
-            return reserva
+        if habitacion and habitacion.consultar_disponibilidad(fecha_entrada, fecha_salida):
+            if habitacion.agregar_reserva(fecha_entrada, fecha_salida):
+                reserva = Reserva(self.contador_reservas, habitacion, usuario, fecha_entrada, fecha_salida)
+                self.reservas[self.contador_reservas] = reserva
+                self.contador_reservas += 1
+                return reserva
         return None
+            
 
     def cancelar_reserva(self, numero_reserva):
         if numero_reserva in self.reservas:

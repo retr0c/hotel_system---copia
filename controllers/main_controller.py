@@ -72,6 +72,7 @@ class MainController:
         
     def show_rooms(self):
         """Muestra la vista de habitaciones"""
+        self.frames["rooms"].clear()
         self.show_frame("rooms")    
 
     def login(self, email, password):

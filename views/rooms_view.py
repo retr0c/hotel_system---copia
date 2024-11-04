@@ -15,12 +15,12 @@ class RoomsView(ctk.CTkFrame):
         )
         self.title_label.pack(pady=20)
 
-        # Contenedor para las tarjetas de habitaciones
-        self.rooms_container = ctk.CTkFrame(self)
-        self.rooms_container.pack(fill="both", expand=True, padx=20, pady=20)
+        # Contenedor para las habitaciones
+        self.rooms_frame = ctk.CTkFrame(self)
+        self.rooms_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
-        # Crear tarjetas para cada tipo de habitación
-        self.create_room_cards()
+        # Mostrar habitaciones
+        self.display_rooms()
 
         # Botón de volver
         self.back_button = ctk.CTkButton(
@@ -35,95 +35,73 @@ class RoomsView(ctk.CTkFrame):
         )
         self.back_button.pack(pady=20)
 
-    def create_room_cards(self):
-        room_types = [
-            {
-                "tipo": "Individual",
-                "precio": "50",
-                "caracteristicas": [
-                    "Cama individual",
-                    "Wi-Fi gratuito",
-                    "Baño privado",
-                    "TV LCD",
-                    "Aire acondicionado"
-                ]
+    def display_rooms(self):
+        room_types = {
+            "Individual": {
+                "precio": 50,
+                "caracteristicas": "Cama individual, Wi-Fi, TV, Baño privado",
+                "imagen": "🛏️"  # Emoji como placeholder
             },
-            {
-                "tipo": "Doble",
-                "precio": "80",
-                "caracteristicas": [
-                    "Dos camas individuales",
-                    "Wi-Fi gratuito",
-                    "Baño privado",
-                    "TV LCD",
-                    "Aire acondicionado",
-                    "Mini nevera"
-                ]
+            "Doble": {
+                "precio": 80,
+                "caracteristicas": "Dos camas, TV, Wi-Fi, Baño privado, Mini bar",
+                "imagen": "🛏️🛏️"
             },
-            {
-                "tipo": "Suite",
-                "precio": "150",
-                "caracteristicas": [
-                    "Cama king size",
-                    "Wi-Fi gratuito",
-                    "Baño de lujo con jacuzzi",
-                    "TV LCD 55\"",
-                    "Aire acondicionado",
-                    "Mini bar",
-                    "Sala de estar",
-                    "Vista panorámica"
-                ]
+            "Suite": {
+                "precio": 150,
+                "caracteristicas": "Cama king, Jacuzzi, Wi-Fi, TV 4K, Sala de estar, Mini bar",
+                "imagen": "👑"
             }
-        ]
+        }
 
-        for room in room_types:
-            # Crear marco para la tarjeta
-            card = ctk.CTkFrame(self.rooms_container, fg_color="#1f1f1f")
-            card.pack(fill="x", padx=20, pady=10)
+        for room_type, details in room_types.items():
+            room_frame = ctk.CTkFrame(self.rooms_frame, fg_color="#1f1f1f")
+            room_frame.pack(fill="x", padx=10, pady=5)
 
             # Título de la habitación
-            ctk.CTkLabel(
-                card,
-                text=f"Habitación {room['tipo']}",
-                font=("Helvetica", 20, "bold"),
-                text_color="#FFD700"
-            ).pack(pady=10)
+            title_frame = ctk.CTkFrame(room_frame, fg_color="transparent")
+            title_frame.pack(fill="x", padx=10, pady=5)
 
-            # Precio
             ctk.CTkLabel(
-                card,
-                text=f"${room['precio']} por noche",
+                title_frame,
+                text=f"{details['imagen']} {room_type}",
+                font=("Helvetica", 18, "bold"),
+                text_color="#FFD700"
+            ).pack(side="left", padx=5)
+
+            ctk.CTkLabel(
+                title_frame,
+                text=f"${details['precio']}/noche",
                 font=("Helvetica", 16),
                 text_color="#FFD700"
-            ).pack(pady=5)
+            ).pack(side="right", padx=5)
 
             # Características
-            for caracteristica in room['caracteristicas']:
-                ctk.CTkLabel(
-                    card,
-                    text=f"• {caracteristica}",
-                    font=("Helvetica", 14),
-                    text_color="white"
-                ).pack(pady=2)
+            ctk.CTkLabel(
+                room_frame,
+                text=f"Características: {details['caracteristicas']}",
+                font=("Helvetica", 14),
+                text_color="white",
+                wraplength=600,
+                justify="left"
+            ).pack(padx=10, pady=5)
 
-            # Botón de reservar
-            ctk.CTkButton(
-                card,
-                text="Reservar",
-                command=lambda t=room['tipo']: self.go_to_reservation(t),
-                width=150,
-                height=35,
-                fg_color="#FFD700",
-                text_color="black",
-                hover_color="#CFB53B"
-            ).pack(pady=15)
+            # Estado de disponibilidad
+            disponibles = self.get_available_count(room_type)
+            ctk.CTkLabel(
+                room_frame,
+                text=f"Habitaciones disponibles: {disponibles}",
+                font=("Helvetica", 14),
+                text_color="#32CD32" if disponibles > 0 else "#FF0000"
+            ).pack(padx=10, pady=5)
 
-    def go_to_reservation(self, room_type):
-        self.controller.frames["reservation"].room_var.set(room_type)
-        self.controller.show_reservation()
+    def get_available_count(self, room_type):
+        return sum(1 for room in self.controller.hotel.habitaciones 
+                  if room.tipo == room_type and room.consultar_disponibilidad())
 
     def back_to_dashboard(self):
         self.controller.show_frame("dashboard")
 
     def clear(self):
-        pass
+        for widget in self.rooms_frame.winfo_children():
+            widget.destroy()
