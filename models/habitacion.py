@@ -38,3 +38,7 @@ class Habitacion:
             self.reservas.remove((fecha_entrada, fecha_salida))
             return True
         return False
+    
+    def actualizar_precio(self, nuevo_precio):
+        self.precio = nuevo_precio
+        return True

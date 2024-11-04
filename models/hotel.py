@@ -103,3 +103,13 @@ class Hotel:
         
         self.contador_reservas += 1
         return reserva
+    
+    def cambiar_precio_habitacion(self, tipo_habitacion, nuevo_precio):
+        if self.usuario_actual and self.usuario_actual.es_admin:
+            habitaciones_modificadas = 0
+            for habitacion in self.habitaciones:
+                if habitacion.tipo == tipo_habitacion:
+                    habitacion.actualizar_precio(nuevo_precio)
+                    habitaciones_modificadas += 1
+            return habitaciones_modificadas > 0
+        return False
