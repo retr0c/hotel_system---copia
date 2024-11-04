@@ -165,14 +165,14 @@ class ReservationView(ctk.CTkFrame):
     def show_error(self, message):
         error = ctk.CTkToplevel(self)
         error.title("Error")
-        error.geometry("400x200")
+        error.geometry("300x200")
         
         ctk.CTkLabel(
             error,
             text=message,
             font=("Helvetica", 14),
             text_color="#FFD700",
-            wraplength=350
+            wraplength=250
         ).pack(pady=20)
         
         ctk.CTkButton(

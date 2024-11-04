@@ -73,7 +73,7 @@ class Hotel:
         return [reserva for reserva in self.reservas.values() if reserva.usuario == usuario]
     
     def verificar_disponibilidad(self, id_habitacion, fecha_entrada, fecha_salida):
-        """Verifica si una habitación está disponible para un rango de fechas"""
+        """Verifica si la habitación está disponible para las fechas dadas"""
         if id_habitacion not in self.reservas_por_habitacion:
             return True
             
@@ -85,20 +85,19 @@ class Hotel:
 
     def realizar_reserva(self, id_habitacion, usuario, fecha_entrada, fecha_salida):
         habitacion = self.obtener_habitacion_por_id(id_habitacion)
+        
         if not habitacion:
             return None
-
-        # Verificar disponibilidad
+            
+        # Verificar disponibilidad para las fechas
         if not self.verificar_disponibilidad(id_habitacion, fecha_entrada, fecha_salida):
             return None
-
+            
         # Crear la reserva
         reserva = Reserva(self.contador_reservas, habitacion, usuario, fecha_entrada, fecha_salida)
-        
-        # Guardar la reserva
         self.reservas[self.contador_reservas] = reserva
         
-        # Actualizar el tracking de reservas por habitación
+        # Actualizar el tracking de fechas
         if id_habitacion not in self.reservas_por_habitacion:
             self.reservas_por_habitacion[id_habitacion] = []
         self.reservas_por_habitacion[id_habitacion].append(reserva)

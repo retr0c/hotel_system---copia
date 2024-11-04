@@ -89,6 +89,7 @@ class DashboardView(ctk.CTkFrame):
     def ver_habitaciones(self):
         # Por implementar
         print("Ver habitaciones")
+        self.controller.show_rooms()
         
     def hacer_reserva(self):
          self.controller.show_reservation()

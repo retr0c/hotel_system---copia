@@ -27,11 +27,10 @@ class MainController:
         self.container.grid_columnconfigure(0, weight=1)
         
         self.frames = {}
-        for F in (LoginView, RegisterView, DashboardView, ReservationView, HistoryView):
+        for F in (LoginView, RegisterView, DashboardView, ReservationView, HistoryView, RoomView):
             frame = F(self.container, self)
             self.frames[F.__name__.lower().replace("view", "")] = frame
             frame.grid(row=0, column=0, sticky="nsew")
-        self.setup_views()
         
         self.show_login()
 
@@ -72,7 +71,6 @@ class MainController:
         
     def show_rooms(self):
         """Muestra la vista de habitaciones"""
-        self.frames["rooms"].clear()
         self.show_frame("rooms")    
 
     def login(self, email, password):
