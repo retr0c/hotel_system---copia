@@ -16,9 +16,11 @@ class Hotel:
             Habitacion(6, 'Suite', 150, 'Cama king, Jacuzzi, Wi-Fi')
         ]
         self.reservas = {}
+        self.reservas_por_habitacion = {}  # Inicialización del diccionario para rastrear reservas por habitación
         self.contador_reservas = 1
         self.usuarios = [Usuario('admin', 'admin@hotel.com', 'admin123', es_admin=True)]
         self.usuario_actual = None
+        
 
     def obtener_habitacion_por_id(self, id_habitacion):
         for habitacion in self.habitaciones:
@@ -26,26 +28,23 @@ class Hotel:
                 return habitacion
         return None
 
-    def realizar_reserva(self, id_habitacion, usuario, fecha_entrada, fecha_salida):
-        habitacion = self.obtener_habitacion_por_id(id_habitacion)
-        if habitacion and habitacion.consultar_disponibilidad(fecha_entrada, fecha_salida):
-            if habitacion.agregar_reserva(fecha_entrada, fecha_salida):
-                reserva = Reserva(self.contador_reservas, habitacion, usuario, fecha_entrada, fecha_salida)
-                self.reservas[self.contador_reservas] = reserva
-                self.contador_reservas += 1
-                return reserva
-        return None
-            
 
     def cancelar_reserva(self, numero_reserva):
         if numero_reserva in self.reservas:
             reserva = self.reservas[numero_reserva]
             if reserva.usuario == self.usuario_actual or self.usuario_actual.es_admin:
-                reserva.habitacion.actualizar_estado('Disponible')
+                # Remover la reserva de reservas_por_habitacion
+                id_habitacion = reserva.habitacion.id_habitacion
+                if id_habitacion in self.reservas_por_habitacion:
+                    self.reservas_por_habitacion[id_habitacion] = [
+                        r for r in self.reservas_por_habitacion[id_habitacion] 
+                        if r.numero_reserva != numero_reserva
+                    ]
+                # Eliminar la reserva
                 del self.reservas[numero_reserva]
                 return True
         return False
-
+    
     def modificar_reserva(self, numero_reserva, nueva_fecha_entrada, nueva_fecha_salida):
         if numero_reserva in self.reservas:
             reserva = self.reservas[numero_reserva]

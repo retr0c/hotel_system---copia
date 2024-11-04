@@ -6,7 +6,7 @@ class DashboardView(ctk.CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
-        
+
         # Frame principal
         self.main_frame = ctk.CTkFrame(
             self,
@@ -14,11 +14,11 @@ class DashboardView(ctk.CTkFrame):
             fg_color="#2b2b2b"
         )
         self.main_frame.pack(fill="both", expand=True, padx=20, pady=20)
-        
+
         # Header con información del usuario
         self.header_frame = ctk.CTkFrame(self.main_frame, fg_color="#1f1f1f")
         self.header_frame.pack(fill="x", padx=20, pady=10)
-        
+
         self.welcome_label = ctk.CTkLabel(
             self.header_frame,
             text="Bienvenido",
@@ -26,11 +26,11 @@ class DashboardView(ctk.CTkFrame):
             text_color="#FFD700"
         )
         self.welcome_label.pack(pady=10)
-        
+
         # Contenedor para los botones principales
         self.buttons_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.buttons_frame.pack(pady=20)
-        
+
         # Botones de funcionalidades
         self.ver_habitaciones_btn = ctk.CTkButton(
             self.buttons_frame,
@@ -43,7 +43,7 @@ class DashboardView(ctk.CTkFrame):
             hover_color="#CFB53B"
         )
         self.ver_habitaciones_btn.pack(pady=10)
-        
+
         self.hacer_reserva_btn = ctk.CTkButton(
             self.buttons_frame,
             text="Hacer Reserva",
@@ -55,7 +55,7 @@ class DashboardView(ctk.CTkFrame):
             hover_color="#CFB53B"
         )
         self.hacer_reserva_btn.pack(pady=10)
-        
+
         self.mis_reservas_btn = ctk.CTkButton(
             self.buttons_frame,
             text="Mis Reservas",
@@ -67,7 +67,7 @@ class DashboardView(ctk.CTkFrame):
             hover_color="#CFB53B"
         )
         self.mis_reservas_btn.pack(pady=10)
-        
+
         # Botón de cerrar sesión
         self.logout_btn = ctk.CTkButton(
             self.buttons_frame,
@@ -87,16 +87,14 @@ class DashboardView(ctk.CTkFrame):
         self.welcome_label.configure(text=f"Bienvenido, {usuario.nombre}")
 
     def ver_habitaciones(self):
-        # Por implementar
-        print("Ver habitaciones")
         self.controller.show_rooms()
-        
+
     def hacer_reserva(self):
-         self.controller.show_reservation()
-        
+        self.controller.show_reservation()
+
     def ver_mis_reservas(self):
-        self.controller.show_frame("history")
-        
+        self.controller.show_history()
+
     def logout(self):
         self.controller.logout()
 

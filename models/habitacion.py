@@ -9,6 +9,7 @@ class Habitacion:
         self.precio = precio
         self.caracteristicas = caracteristicas
         self.reservas = []  # Lista de tuplas (fecha_entrada, fecha_salida)
+        
 
     def consultar_disponibilidad(self, fecha_entrada=None, fecha_salida=None):
         if fecha_entrada is None or fecha_salida is None:

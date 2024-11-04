@@ -111,9 +111,14 @@ class ReservationView(ctk.CTkFrame):
         self.back_button.pack(pady=10)
 
     def make_reservation(self):
+        print("Iniciando reserva...")
         room_type = self.room_var.get()
         check_in = self.check_in_date.get_date()
         check_out = self.check_out_date.get_date()
+    
+        print(f"Tipo de habitación: {room_type}")
+        print(f"Fecha entrada: {check_in}")
+        print(f"Fecha salida: {check_out}")
         
         if check_in >= check_out:
             self.show_error("La fecha de salida debe ser posterior a la fecha de entrada.")

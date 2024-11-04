@@ -8,6 +8,7 @@ from views.history_view import HistoryView
 from models.hotel import Hotel
 from models.usuario import Usuario
 from models.reserva import Reserva
+from views.rooms_view import RoomView
 
 class MainController:
     def __init__(self):
@@ -71,7 +72,7 @@ class MainController:
         
     def show_rooms(self):
         """Muestra la vista de habitaciones"""
-        self.show_frame("rooms")    
+        self.show_frame("room")    
 
     def login(self, email, password):
         user = self.hotel.iniciar_sesion(email, password)
@@ -158,3 +159,6 @@ class MainController:
     def cancel_reservation(self, reservation_id):
         """Cancela una reserva existente"""
         return self.hotel.cancelar_reserva(reservation_id)
+    
+    def show_dashboard(self):
+        self.show_frame("dashboard")
