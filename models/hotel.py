@@ -12,8 +12,8 @@ class Hotel:
             Habitacion(2, 'Individual', 50, 'Cama individual, Wi-Fi'),
             Habitacion(3, 'Doble', 80, 'Dos camas, TV, Wi-Fi'),
             Habitacion(4, 'Doble', 80, 'Dos camas, TV, Wi-Fi'),
-            Habitacion(5, 'Suite', 150, 'Cama king, Jacuzzi, Wi-Fi'),
-            Habitacion(6, 'Suite', 150, 'Cama king, Jacuzzi, Wi-Fi')
+            Habitacion(5, 'Suite', 150, 'Cama king, Jacuzzi, Wi-Fi, Mesas de juegos, Servicios gratuitos de comidas'),
+            Habitacion(6, 'Suite', 150, 'Cama king, Jacuzzi, Wi-Fi, Mesas de juegos, Servicios gratuitos de comidas')
         ]
         self.reservas = {}
         self.reservas_por_habitacion = {}  # Inicialización del diccionario para rastrear reservas por habitación
@@ -109,7 +109,7 @@ class Hotel:
             habitaciones_modificadas = 0
             for habitacion in self.habitaciones:
                 if habitacion.tipo == tipo_habitacion:
-                    habitacion.actualizar_precio(nuevo_precio)
+                    habitacion.precio = nuevo_precio
                     habitaciones_modificadas += 1
             return habitaciones_modificadas > 0
         return False

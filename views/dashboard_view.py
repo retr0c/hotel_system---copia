@@ -1,4 +1,3 @@
-# views/dashboard_view.py
 import customtkinter as ctk
 from datetime import datetime
 
@@ -85,6 +84,23 @@ class DashboardView(ctk.CTkFrame):
 
     def actualizar_usuario(self, usuario):
         self.welcome_label.configure(text=f"Bienvenido, {usuario.nombre}")
+        
+        # Mostrar botón de admin solo si el usuario es administrador
+        if usuario.es_admin:
+            self.admin_btn = ctk.CTkButton(
+                self.buttons_frame,
+                text="Panel de Administración",
+                command=self.show_admin_panel,
+                width=200,
+                height=40,
+                fg_color="#FFD700",
+                text_color="black",
+                hover_color="#CFB53B"
+            )
+            self.admin_btn.pack(pady=10)
+
+    def show_admin_panel(self):
+        self.controller.show_frame("admin")
 
     def ver_habitaciones(self):
         self.controller.show_rooms()

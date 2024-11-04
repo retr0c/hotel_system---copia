@@ -9,6 +9,8 @@ from models.hotel import Hotel
 from models.usuario import Usuario
 from models.reserva import Reserva
 from views.rooms_view import RoomView
+from views.admin_view import AdminView
+
 
 class MainController:
     def __init__(self):
@@ -28,7 +30,7 @@ class MainController:
         self.container.grid_columnconfigure(0, weight=1)
         
         self.frames = {}
-        for F in (LoginView, RegisterView, DashboardView, ReservationView, HistoryView, RoomView):
+        for F in (LoginView, RegisterView, DashboardView, ReservationView, HistoryView, RoomView, AdminView):
             frame = F(self.container, self)
             self.frames[F.__name__.lower().replace("view", "")] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -162,3 +164,22 @@ class MainController:
     
     def show_dashboard(self):
         self.show_frame("dashboard")
+        
+    def update_room_prices(self):
+        """Actualiza las vistas después de un cambio en los precios"""
+        # Actualizar la vista de habitaciones si está visible
+        if "room" in self.frames:
+            self.frames["room"].show_rooms()
+            
+        
+        # Actualizar la vista de reservas si existe
+        
+        if "reservation" in self.frames:
+            if hasattr(self.frames["reservation"], "update_prices"):
+                self.frames["reservation"].update_prices()
+
+    def show_rooms(self):
+        """Muestra la vista de habitaciones"""
+        self.show_frame("room")
+        # Asegurarse de que los precios estén actualizados
+        self.frames["room"].show_rooms()    

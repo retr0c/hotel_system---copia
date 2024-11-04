@@ -127,10 +127,14 @@ class ReservationView(ctk.CTkFrame):
         success = self.controller.make_reservation(room_type, check_in, check_out)
         
         if success:
-            # Código para mostrar confirmación
+            # Obtener el precio actual de la habitación
+            price_per_night = 0
+            for habitacion in self.controller.hotel.habitaciones:
+                if habitacion.tipo == room_type:
+                    price_per_night = habitacion.precio
+                    break
+            
             days = (check_out - check_in).days
-            prices = {"Individual": 50, "Doble": 80, "Suite": 150}
-            price_per_night = prices.get(room_type, 0)
             total_price = days * price_per_night
             
             confirmation = ctk.CTkToplevel(self)
@@ -142,6 +146,7 @@ class ReservationView(ctk.CTkFrame):
             message += f"Fecha de llegada: {check_in.strftime('%d/%m/%Y')}\n"
             message += f"Fecha de salida: {check_out.strftime('%d/%m/%Y')}\n"
             message += f"Número de noches: {days}\n"
+            message += f"Precio por noche: ${price_per_night}\n"
             message += f"Precio total: ${total_price}"
             
             ctk.CTkLabel(
